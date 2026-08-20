@@ -1,0 +1,345 @@
+@import "tailwindcss";
+
+:root {
+  --paper-top: #fbfcf9;
+  --paper-bottom: #eef2ea;
+  --ink: #0a0a0a;
+  --green: #0d9444;
+  --green-deep: #07682f;
+  --muted: #767c72;
+  --word: rgba(10, 10, 10, 0.13);
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: var(--paper-top);
+  color: var(--ink);
+  font-family: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ---------- stage ---------- */
+
+.stage {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  padding: clamp(2rem, 6svh, 4rem) 1.5rem clamp(5rem, 14svh, 8rem);
+  background: linear-gradient(
+    to bottom,
+    var(--paper-top) 0%,
+    var(--paper-top) 42%,
+    var(--paper-bottom) 100%
+  );
+}
+
+/* ---------- multilingual marquee ---------- */
+
+.marquee {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  gap: clamp(0.5rem, 1.4svh, 1.25rem);
+  pointer-events: none;
+  user-select: none;
+}
+
+.row {
+  overflow: hidden;
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000 12%,
+    #000 88%,
+    transparent 100%
+  );
+}
+
+.track {
+  display: flex;
+  width: max-content;
+  gap: clamp(1.5rem, 4vw, 3.25rem);
+  will-change: transform;
+  animation: scroll var(--dur, 100s) linear infinite;
+}
+
+.row[data-reverse] .track {
+  animation-direction: reverse;
+}
+
+.word {
+  font-size: clamp(1.5rem, 1rem + 2.4vw, 2.9rem);
+  font-weight: 400;
+  line-height: 1.25;
+  color: var(--word);
+  white-space: nowrap;
+}
+
+[data-script="arabic"] {
+  font-family: "Noto Sans Arabic", var(--font-plex-arabic), sans-serif;
+}
+[data-script="devanagari"] {
+  font-family: "Noto Sans Devanagari", sans-serif;
+}
+[data-script="bengali"] {
+  font-family: "Noto Sans Bengali", sans-serif;
+}
+[data-script="malayalam"] {
+  font-family: "Noto Sans Malayalam", sans-serif;
+}
+[data-script="tamil"] {
+  font-family: "Noto Sans Tamil", sans-serif;
+}
+[data-script="gurmukhi"] {
+  font-family: "Noto Sans Gurmukhi", sans-serif;
+}
+[data-script="sinhala"] {
+  font-family: "Noto Sans Sinhala", sans-serif;
+}
+[data-script="ethiopic"] {
+  font-family: "Noto Sans Ethiopic", sans-serif;
+}
+
+@keyframes scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ---------- scrim: keeps the lockup legible over moving text ---------- */
+
+.scrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    /* clears the footer so the status line never sits on moving text */
+    linear-gradient(
+      to top,
+      var(--paper-bottom) 0%,
+      rgba(238, 242, 234, 0.92) 7%,
+      rgba(238, 242, 234, 0) 17%
+    ),
+    radial-gradient(
+      ellipse 44rem 22rem at center 46%,
+      var(--paper-top) 0%,
+      rgba(251, 252, 249, 0.94) 38%,
+      rgba(251, 252, 249, 0.72) 58%,
+      rgba(251, 252, 249, 0) 78%
+    );
+}
+
+/* ---------- content ---------- */
+
+.content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1.5rem, 3.4vw, 2.2rem);
+}
+
+.logo {
+  margin: 0;
+  width: min(78vw, 460px);
+}
+
+.logo img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.tagline {
+  margin: 0;
+  font-size: clamp(1rem, 0.88rem + 0.62vw, 1.4rem);
+  font-weight: 300;
+  letter-spacing: 0.008em;
+  color: var(--muted);
+  text-align: center;
+  text-wrap: balance;
+  line-height: 1.6;
+}
+
+.tagline .ar {
+  font-family: var(--font-plex-arabic), "Noto Sans Arabic", sans-serif;
+  font-size: 1.12em;
+  line-height: 1;
+}
+
+.tagline .was {
+  color: #a8ada4;
+}
+
+.tagline .now {
+  color: var(--green);
+  font-weight: 500;
+}
+
+/* ---------- cycling tagline ---------- */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Width animates to each translation, so "to" glides rather than jumps.
+   The word is faded out before the width changes, so nothing overlaps. */
+.slot {
+  display: inline-block;
+  vertical-align: baseline;
+  text-align: center;
+  white-space: nowrap;
+  transition: width 320ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.was,
+.now {
+  display: inline-block;
+  font-size: 1.12em;
+  line-height: 1;
+  unicode-bidi: isolate;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.was[data-shown],
+.now[data-shown] {
+  opacity: 1;
+  transition-duration: 260ms;
+}
+
+.was[data-script="arabic"],
+.now[data-script="arabic"] {
+  font-family: var(--font-plex-arabic), "Noto Sans Arabic", sans-serif;
+}
+
+.was {
+  color: #a8ada4;
+}
+
+.now {
+  color: var(--green);
+  font-weight: 500;
+}
+
+/* Measured, never seen. */
+.probe {
+  position: absolute;
+  visibility: hidden;
+  pointer-events: none;
+  white-space: nowrap;
+  top: 0;
+  left: 0;
+}
+
+.probe .was,
+.probe .now {
+  opacity: 1;
+  transition: none;
+}
+
+/* ---------- grain ---------- */
+
+.grain {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0.038;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---------- motion ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .logo,
+  .tagline {
+    opacity: 0;
+    animation-fill-mode: forwards;
+    animation-timing-function: var(--ease-out);
+  }
+
+  .logo {
+    animation-name: logo-in;
+    animation-duration: 1.6s;
+    animation-delay: 0.3s;
+  }
+
+  .tagline {
+    animation-name: rise;
+    animation-duration: 1.15s;
+    animation-delay: 1s;
+  }
+
+  .marquee {
+    opacity: 0;
+    animation: fade-in 2s var(--ease-out) 0.15s forwards;
+  }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    animation: none;
+  }
+}
+
+@keyframes logo-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.972);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  to {
+    opacity: 1;
+  }
+}
+
+/* ---------- a11y ---------- */
+
+:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 3px;
+}
