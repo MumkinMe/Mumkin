@@ -59,22 +59,19 @@ export type Pair = {
  * listed here; the marquee above carries the wider set.
  */
 export const PAIRS: Pair[] = [
+  // Mumkin's own words first, in the Latin spelling most people say them in.
+  { no: "mish mumkin", yes: "mumkin", lang: "en", script: "latin" },
+  // Then what they mean.
   { no: "impossible", yes: "possible", lang: "en", script: "latin" },
-  { no: "مش ممكن", yes: "ممكن", lang: "ar", script: "arabic" },
-  { no: "नामुमकिन", yes: "मुमकिन", lang: "hi", script: "devanagari" },
-  { no: "ناممکن", yes: "ممکن", lang: "ur", script: "arabic" },
-  { no: "അസാധ്യം", yes: "സാധ്യം", lang: "ml", script: "malayalam" },
-  { no: "अशक्य", yes: "शक्य", lang: "mr", script: "devanagari" },
-  { no: "অসম্ভব", yes: "সম্ভব", lang: "bn", script: "bengali" },
-  { no: "முடியாது", yes: "முடியும்", lang: "ta", script: "tamil" },
+  // Then the same shift in the languages Mumkin's customers speak.
+  { no: "\u0645\u0634 \u0645\u0645\u0643\u0646", yes: "\u0645\u0645\u0643\u0646", lang: "ar", script: "arabic" },
+  { no: "\u0d05\u0d38\u0d3e\u0d27\u0d4d\u0d2f\u0d02", yes: "\u0d38\u0d3e\u0d27\u0d4d\u0d2f\u0d02", lang: "ml", script: "malayalam" },
+  { no: "\u0928\u093e\u092e\u0941\u092e\u0915\u093f\u0928", yes: "\u092e\u0941\u092e\u0915\u093f\u0928", lang: "hi", script: "devanagari" },
+  { no: "\u0646\u0627\u0645\u0645\u06a9\u0646", yes: "\u0645\u0645\u06a9\u0646", lang: "ur", script: "arabic" },
   { no: "Haiwezekani", yes: "Inawezekana", lang: "sw", script: "latin" },
-  { no: "አይቻልም", yes: "ይቻላል", lang: "am", script: "ethiopic" },
-  { no: "imkânsız", yes: "mümkün", lang: "tr", script: "latin" },
-  { no: "mustahil", yes: "mungkin", lang: "id", script: "latin" },
-  { no: "imposible", yes: "posible", lang: "tl", script: "latin" },
-  { no: "असम्भव", yes: "सम्भव", lang: "ne", script: "devanagari" },
-  { no: "නොහැකි", yes: "හැකි", lang: "si", script: "sinhala" },
-  { no: "ناممکن", yes: "ممکن", lang: "fa", script: "arabic" },
+  { no: "\u12a0\u12ed\u127b\u120d\u121d", yes: "\u12ed\u127b\u120b\u120d", lang: "am", script: "ethiopic" },
+  { no: "\u0bae\u0bc1\u0b9f\u0bbf\u0baf\u0bbe\u0ba4\u0bc1", yes: "\u0bae\u0bc1\u0b9f\u0bbf\u0baf\u0bc1\u0bae\u0bcd", lang: "ta", script: "tamil" },
+  { no: "\u0db1\u0ddc\u0dc4\u0dd0\u0d9a\u0dd2", yes: "\u0dc4\u0dd0\u0d9a\u0dd2", lang: "si", script: "sinhala" },
 ];
 
 /** Google Fonts family per non-Latin script. Latin is covered by IBM Plex Sans. */

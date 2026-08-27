@@ -205,36 +205,43 @@ body {
   border: 0;
 }
 
-/* Width animates to each translation, so "to" glides rather than jumps.
-   The word is faded out before the width changes, so nothing overlaps. */
+/* Every translation shares one grid cell, so the slot is always as wide as its
+   widest language and "to" never moves. The browser keeps that width correct
+   across font and viewport changes on its own. */
+/* Sizes itself to whichever word is showing, because only that word is in
+   flow (see below). No JS measurement, so it can never fall out of sync. */
 .slot {
-  display: inline-block;
+  position: relative;
+  display: inline-grid;
   vertical-align: baseline;
-  text-align: center;
-  white-space: nowrap;
-  transition: width 320ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.was,
-.now {
-  display: inline-block;
+.w {
+  grid-area: 1 / 1;
+  justify-self: center;
   font-size: 1.12em;
   line-height: 1;
-  unicode-bidi: isolate;
   white-space: nowrap;
+  unicode-bidi: isolate;
   opacity: 0;
-  transition: opacity 180ms ease;
+  /* Leaving word clears quickly... */
+  transition: opacity 160ms ease;
 }
 
-.was[data-shown],
-.now[data-shown] {
+/* Out of flow, so the eight other translations do not widen the grid column
+   and shove the visible word sideways over "to". */
+.w:not([data-shown]) {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* ...and the arriving one is held back just long enough that two different
+   words are never both legible at once. */
+.w[data-shown] {
   opacity: 1;
-  transition-duration: 260ms;
-}
-
-.was[data-script="arabic"],
-.now[data-script="arabic"] {
-  font-family: var(--font-plex-arabic), "Noto Sans Arabic", sans-serif;
+  transition: opacity 260ms ease 120ms;
 }
 
 .was {
@@ -246,20 +253,16 @@ body {
   font-weight: 500;
 }
 
-/* Measured, never seen. */
-.probe {
-  position: absolute;
-  visibility: hidden;
-  pointer-events: none;
-  white-space: nowrap;
-  top: 0;
-  left: 0;
+.was[data-script="arabic"],
+.now[data-script="arabic"] {
+  font-family: var(--font-plex-arabic), "Noto Sans Arabic", sans-serif;
 }
 
-.probe .was,
-.probe .now {
-  opacity: 1;
-  transition: none;
+@media (prefers-reduced-motion: reduce) {
+  .slot,
+  .w {
+    transition: none;
+  }
 }
 
 /* ---------- grain ---------- */
