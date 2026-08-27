@@ -60,7 +60,7 @@ export type Pair = {
  */
 export const PAIRS: Pair[] = [
   // Mumkin's own words first, in the Latin spelling most people say them in.
-  { no: "mish mumkin", yes: "mumkin", lang: "en", script: "latin" },
+  { no: "\u2018mish mumkin\u2019", yes: "mumkin", lang: "en", script: "latin" },
   // Then what they mean.
   { no: "impossible", yes: "possible", lang: "en", script: "latin" },
   // Then the same shift in the languages Mumkin's customers speak.
