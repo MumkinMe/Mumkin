@@ -32,3 +32,6 @@ Icon?
 
 # local editor/tooling config
 .claude/
+
+# private source documents (pitch decks etc.)
+*.pdf

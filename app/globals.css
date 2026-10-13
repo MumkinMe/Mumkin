@@ -12,9 +12,10 @@
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-html,
-body {
-  height: 100%;
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 body {
@@ -23,6 +24,14 @@ body {
   font-family: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+}
+
+/* ---------- page ---------- */
+
+/* Positioned so the grain overlay spans every section, not just the first
+   screen. */
+.page {
+  position: relative;
 }
 
 /* ---------- stage ---------- */
@@ -44,9 +53,10 @@ body {
 
 /* ---------- multilingual marquee ---------- */
 
+/* Stops short of the bottom so no row ever runs behind the scroll cue. */
 .marquee {
   position: absolute;
-  inset: 0;
+  inset: 0 0 clamp(5rem, 11svh, 7rem);
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -127,12 +137,13 @@ body {
   inset: 0;
   pointer-events: none;
   background:
-    /* clears the footer so the status line never sits on moving text */
+    /* clears the bottom so the scroll cue never sits on moving text, and
+       lets the first screen fade into the charter below it */
     linear-gradient(
       to top,
-      var(--paper-bottom) 0%,
-      rgba(238, 242, 234, 0.92) 7%,
-      rgba(238, 242, 234, 0) 17%
+      var(--paper-bottom) 0,
+      rgba(238, 242, 234, 0.95) 6.5rem,
+      rgba(238, 242, 234, 0) 13rem
     ),
     radial-gradient(
       ellipse 44rem 22rem at center 46%,
@@ -189,6 +200,288 @@ body {
 .tagline .now {
   color: var(--green);
   font-weight: 500;
+}
+
+/* ---------- scroll cue ---------- */
+
+/* A hairline with a glowing green segment flowing down it. The link box is
+   wider than the line so it is still easy to tap. */
+.cue {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  bottom: clamp(1.25rem, 3.5svh, 2.25rem);
+  transform: translateX(-50%);
+  display: block;
+  width: 2.75rem;
+  height: 3.75rem;
+  overflow: hidden;
+}
+
+.cue::before,
+.cue::after {
+  content: "";
+  position: absolute;
+  left: calc(50% - 0.5px);
+  top: 0;
+  width: 1px;
+}
+
+/* The track fades out at both ends so the line has no hard edges. */
+.cue::before {
+  bottom: 0;
+  background: rgba(10, 10, 10, 0.16);
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #000 25%,
+    #000 75%,
+    transparent 100%
+  );
+}
+
+/* drop-shadow rather than box-shadow, so the glow follows the gradient and
+   tapers with it instead of outlining a hard rectangle. */
+.cue::after {
+  height: 38%;
+  background: linear-gradient(
+    to bottom,
+    rgba(13, 148, 68, 0) 0%,
+    var(--green) 70%,
+    #3ccf78 100%
+  );
+  filter: drop-shadow(0 0 3px rgba(13, 148, 68, 0.95))
+    drop-shadow(0 0 10px rgba(13, 148, 68, 0.6));
+  transform: translateY(80%);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cue::after {
+    animation: cue 2.8s cubic-bezier(0.65, 0, 0.35, 1) 2.4s infinite both;
+  }
+}
+
+@keyframes cue {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  25%,
+  70% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(265%);
+    opacity: 0;
+  }
+}
+
+/* ---------- eyebrow labels ---------- */
+
+.eyebrow {
+  margin: 0;
+  font-family: var(--font-plex-mono), ui-monospace, monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* ---------- charter ---------- */
+
+.charter {
+  position: relative;
+  padding: clamp(5rem, 11vw, 8.5rem) 1.5rem clamp(6rem, 13vw, 10rem);
+  background: var(--paper-bottom);
+  text-align: center;
+}
+
+.charter .eyebrow {
+  color: var(--green);
+}
+
+.charter-title {
+  margin: 0.9rem 0 0;
+  font-size: clamp(2.1rem, 1.5rem + 2.6vw, 3.4rem);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.values {
+  list-style: none;
+  max-width: 68rem;
+  margin: clamp(3rem, 6vw, 4.5rem) auto 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  /* Row gap leaves room for the number tab hanging off each card. */
+  gap: 3.25rem clamp(1rem, 2.4vw, 2rem);
+}
+
+.value {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: clamp(9rem, 7rem + 5vw, 11.5rem);
+  padding: 1.75rem 1.25rem 2.25rem;
+  background: var(--paper-top);
+  border: 1px solid rgba(13, 148, 68, 0.24);
+  border-radius: 6px;
+}
+
+.value-name {
+  font-size: clamp(1.05rem, 0.9rem + 0.6vw, 1.5rem);
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--green-deep);
+  text-wrap: balance;
+}
+
+/* One line each, broken where the charter breaks them. The space between the
+   two spans keeps the text reading correctly when copied. */
+.value-name > span {
+  display: block;
+}
+
+/* Sits across the card's bottom edge, as in the printed charter. */
+.value-num {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translate(-50%, 50%);
+  padding: 0.35rem 1.1rem;
+  font-family: var(--font-plex-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  color: var(--green-deep);
+  background: var(--paper-top);
+  border: 1px solid var(--green);
+}
+
+@media (max-width: 860px) {
+  .values {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Two columns get too narrow to hold the charter's line breaks on a phone. */
+@media (max-width: 560px) {
+  .values {
+    grid-template-columns: minmax(0, 22rem);
+    justify-content: center;
+    row-gap: 2.75rem;
+  }
+
+  .value {
+    min-height: 8rem;
+  }
+
+  .value-name {
+    font-size: 1.2rem;
+  }
+}
+
+/* Cards rise in as they scroll into view, a column at a time. Each one has
+   finished by the moment it is fully on screen, so nothing visible is ever
+   left half faded. Browsers without scroll-driven animations just show them. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .charter .eyebrow,
+    .charter-title,
+    .value {
+      animation: charter-in linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 70%;
+    }
+
+    .value:nth-child(4n + 2) {
+      animation-range: entry 10% entry 80%;
+    }
+
+    .value:nth-child(4n + 3) {
+      animation-range: entry 20% entry 90%;
+    }
+
+    .value:nth-child(4n + 4) {
+      animation-range: entry 30% entry 100%;
+    }
+
+    @media (max-width: 860px) {
+      .value:nth-child(odd) {
+        animation-range: entry 0% entry 80%;
+      }
+
+      .value:nth-child(even) {
+        animation-range: entry 20% entry 100%;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .value:nth-child(n) {
+        animation-range: entry 0% entry 80%;
+      }
+    }
+  }
+}
+
+@keyframes charter-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------- footer ---------- */
+
+.foot {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+  padding: clamp(3.5rem, 8vw, 5.5rem) 1.5rem;
+  text-align: center;
+  color: #fff;
+  /* The green-to-black band from the foot of the charter deck. */
+  background: linear-gradient(
+    100deg,
+    var(--green) 0%,
+    var(--green-deep) 36%,
+    #0c1d12 76%,
+    var(--ink) 100%
+  );
+}
+
+.foot .eyebrow {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.foot-mail {
+  font-size: clamp(1.4rem, 1rem + 1.8vw, 2.25rem);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: #fff;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: rgba(255, 255, 255, 0.35);
+  text-underline-offset: 0.22em;
+  transition: text-decoration-color 200ms ease;
+}
+
+.foot-mail:hover {
+  text-decoration-color: #fff;
+}
+
+.foot :focus-visible {
+  outline-color: #fff;
 }
 
 /* ---------- cycling tagline ---------- */
@@ -281,7 +574,8 @@ body {
 
 @media (prefers-reduced-motion: no-preference) {
   .logo,
-  .tagline {
+  .tagline,
+  .cue {
     opacity: 0;
     animation-fill-mode: forwards;
     animation-timing-function: var(--ease-out);
@@ -297,6 +591,12 @@ body {
     animation-name: rise;
     animation-duration: 1.15s;
     animation-delay: 1s;
+  }
+
+  .cue {
+    animation-name: fade-in;
+    animation-duration: 1.4s;
+    animation-delay: 1.8s;
   }
 
   .marquee {

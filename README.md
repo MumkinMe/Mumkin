@@ -17,7 +17,8 @@ Next.js 16 with the App Router, Tailwind and TypeScript. Every route is
 static, so `npm run build` produces prerendered output and there is no server
 to run.
 
-- `app/page.tsx` — the page: logo, tagline, background marquee
+- `app/page.tsx` — the page: logo, tagline and background marquee, then the
+  charter (the eight Mumkin values) and the investor relations footer
 - `app/Tagline.tsx` — cycles the tagline through languages
 - `app/languages.ts` — the translations, and the font request built from them
 - `public/mumkin-logo.png` — the logo lockup, trimmed from `mumkin logo.png`
