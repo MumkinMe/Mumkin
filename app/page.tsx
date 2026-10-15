@@ -33,6 +33,13 @@ const ROWS = [
 export default function Home() {
   return (
     <div className="page">
+      <header className="top">
+        {/* A plain link, not next/link: /login is a redirect off the site. */}
+        <a className="login" href="/login">
+          Team login
+        </a>
+      </header>
+
       <main>
         <section className="stage">
           {/* Decorative: "possible" in the languages Mumkin's customers speak. */}

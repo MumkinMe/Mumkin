@@ -34,6 +34,39 @@ body {
   position: relative;
 }
 
+/* ---------- header ---------- */
+
+.top {
+  position: absolute;
+  z-index: 4;
+  top: clamp(1rem, 2.5vw, 1.75rem);
+  right: clamp(1rem, 2.5vw, 1.75rem);
+}
+
+/* Solid enough that the marquee words passing behind never cut through it. */
+.login {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.5rem;
+  padding: 0 1.15rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--ink);
+  text-decoration: none;
+  background: rgba(251, 252, 249, 0.88);
+  border: 1px solid rgba(10, 10, 10, 0.14);
+  border-radius: 999px;
+  backdrop-filter: blur(6px);
+  transition:
+    color 200ms ease,
+    border-color 200ms ease;
+}
+
+.login:hover {
+  color: var(--green-deep);
+  border-color: var(--green);
+}
+
 /* ---------- stage ---------- */
 
 .stage {
@@ -575,7 +608,8 @@ body {
 @media (prefers-reduced-motion: no-preference) {
   .logo,
   .tagline,
-  .cue {
+  .cue,
+  .top {
     opacity: 0;
     animation-fill-mode: forwards;
     animation-timing-function: var(--ease-out);
@@ -591,6 +625,12 @@ body {
     animation-name: rise;
     animation-duration: 1.15s;
     animation-delay: 1s;
+  }
+
+  .top {
+    animation-name: fade-in;
+    animation-duration: 1.4s;
+    animation-delay: 1.4s;
   }
 
   .cue {
