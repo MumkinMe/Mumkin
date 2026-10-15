@@ -22,6 +22,8 @@ to run.
 - `app/Tagline.tsx` — cycles the tagline through languages
 - `app/languages.ts` — the translations, and the font request built from them
 - `public/mumkin-logo.png` — the logo lockup, trimmed from `mumkin logo.png`
+- `next.config.ts` — `mumkin.me/login` redirects to the team email sign-in at
+  `email.mumkin.me`
 
 ## Translations
 
